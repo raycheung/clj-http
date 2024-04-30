@@ -41,10 +41,8 @@
   ([socket-factory ^SSLContext ssl-context]
    (let [^SSLContext ssl-context' (or ssl-context (SSLContexts/createDefault))]
      (proxy [SSLConnectionSocketFactory] [ssl-context']
-       (connectSocket [timeout socket host remoteAddress localAddress context]
-         (let [^SSLConnectionSocketFactory this this] ;; avoid reflection
-           (proxy-super connectSocket timeout (socket-factory) host remoteAddress
-                        localAddress context)))))))
+       (createSocket [context]
+         (socket-factory))))))
 
 (defn ^PlainConnectionSocketFactory PlainGenericSocketFactory
   "Given a Function that returns a new socket, create a
